@@ -1,0 +1,26 @@
+{
+  "name": "knex-library-app",
+  "version": "1.0.0",
+  "description": "For this application you will be building a small library application. We'll start with one resource \"authors\" and build onto it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoshCantor/knex-library-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoshCantor/knex-library-app/issues"
+  },
+  "homepage": "https://github.com/JoshCantor/knex-library-app#readme",
+  "dependencies": {
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "knex": "^0.9.0",
+    "locus": "^1.2.0",
+    "morgan": "^1.6.1"
+  }
+}
