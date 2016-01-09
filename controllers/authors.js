@@ -19,7 +19,6 @@ router.post('/new', function(req, res) {
 	});
 });
 
-
 router.get('/update/:id', function(req, res) {
 	var id = req.params.id;
 	knex('authors').where({id:id}).then(function(author) {
@@ -35,7 +34,10 @@ router.put('/:id', function(req, res) {
 });
 
 router.delete('/delete/:id', function(req, res) {
-	//knex('authors').
+	knex('authors').where({id:req.params.id}).del()
+    .then(function() {
+        res.redirect('/authors');
+    });
 });
 
 module.exports = router;
