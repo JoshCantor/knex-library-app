@@ -5,8 +5,13 @@
 </head>
 <body>
 	<h1>Authors</h1>
+	<h4>Click an author to edit</h4>
 	<% authors.forEach(function(author) { %>
-		<%= author.name %>
+		<p><a href="/authors/update/<%= author.id %>"><%= author.name %></a></p>
+		<form method='POST' action='/authors/delete/<%= author.id %>?_method=DELETE'>
+			<input type='submit' value="DELETE <%= author.name %>">
+		</form>
 	<% }) %>
 </body>
 </html>
+

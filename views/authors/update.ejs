@@ -5,5 +5,9 @@
 </head>
 <body>
 	<h1>Update Existing Author</h1>
+	<form method='POST' action='/authors/<%= author.id %>?_method=PUT'>
+		Edit Name: <input type='text' name='name' value='<%= author.name %>'>
+		<input type='submit' value="Edit Name">
+	</form>
 </body>
 </html>
