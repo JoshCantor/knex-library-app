@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Books</title>
+</head>
+<body>
+	<h1>Book List</h1>
+		<% books.forEach(function(book) { %>
+			<ul>
+				<li><a href="books/<%= book.id %>"><%= book.title %></a></li>
+			</ul>
+		<% }); %>
+	<br>
+	
+</body>
+</html>

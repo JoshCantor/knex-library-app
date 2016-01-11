@@ -1,6 +1,7 @@
 var express = require('express'),
 	app = express(),
 	authors = require('./controllers/authors'),
+	books = require('./controllers/books'),
 	bodyParser = require('body-parser'),
 	morgan = require('morgan'),
 	methodOverride = require('method-override');
@@ -12,7 +13,9 @@ app.use(morgan('tiny'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
+app.use('/books', books);
 app.use('/authors', authors);
+
 
 
 app.listen(3000, function() {

@@ -4,7 +4,16 @@ var express = require('express'),
 
 router.get('/', function(req, res) {
 	knex('authors').then(function(authors) {
-		res.render('../views/authors/index', {authors: authors});
+		var authorList = [];
+		authors.forEach(function(author) {
+			knex('books').where({author_id: author.id}).then(function(books) {
+				author.books = books;
+				authorList.push(author);
+				if (authorList.length === authors.length) {
+					res.render('../views/authors/index', {authors: authorList});
+				}
+			});
+		});
 	});
 });	
 
@@ -13,15 +22,13 @@ router.get('/new', function(req, res) {
 });
 
 router.post('/new', function(req, res) {
-	var name = req.body.name;
-	knex('authors').insert({name: name}).then(function(result) {
+	knex('authors').insert({name: req.body.name}).then(function(result) {
 		res.redirect('/authors');
 	});
 });
 
 router.get('/update/:id', function(req, res) {
-	var id = req.params.id;
-	knex('authors').where({id:id}).then(function(author) {
+	knex('authors').where({id: req.params.id}).then(function(author) {
 		res.render('../views/authors/update', {author:author[0]});
 	});
 });
@@ -38,6 +45,13 @@ router.delete('/delete/:id', function(req, res) {
     .then(function() {
         res.redirect('/authors');
     });
+});
+
+router.post('/:id/new-book', function(req, res) {
+	knex('books').insert({title: req.body.title, author_id: req.params.id})
+	.then(function(){
+		res.redirect('/authors');
+	});
 });
 
 module.exports = router;

@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Update Existing Author</title>
+	<title>Update Author Name or Add Book</title>
 </head>
 <body>
-	<h1>Update Existing Author</h1>
+	<h1>Update existing author name or add book by that author</h1>
 	<form method='POST' action='/authors/<%= author.id %>?_method=PUT'>
 		Edit Name: <input type='text' name='name' value='<%= author.name %>'>
 		<input type='submit' value="Edit Name">
+	</form>
+	<h2>OR</h2>
+	<form method='POST' action='/authors/<%= author.id %>/new-book'>
+		Add New Books: <input type='text' name='title'>
+		<input type='submit' value="Add Books">
 	</form>
 </body>
 </html>
