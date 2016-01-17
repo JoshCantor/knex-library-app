@@ -16,6 +16,10 @@ app.use(methodOverride('_method'));
 app.use('/books', books);
 app.use('/authors', authors);
 
+app.get('/', function(req, res) {
+	res.redirect('/authors');
+})
+
 
 
 app.listen(3000, function() {

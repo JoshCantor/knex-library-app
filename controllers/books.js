@@ -3,58 +3,50 @@ var express = require('express'),
 	knex = require('../db/knex');
 
 router.get('/', function(req, res) {
-	var fiction = [],
-		nonFiction = [],
-		science = [],
-		history = [];
 	knex('books').then(function(books) {
 		res.render('../views/books/index', {books: books});
 	});
 });
 
 router.get('/:id', function(req, res) {
-	knex('books').where({id: req.params.id})
+	var bookId = req.params.id;
+	knex('books').where({id: bookId})
 	.then(function(book) {
-		res.render('../views/books/update', {book: book[0]});
+		knex('books_categories').where({book_id: bookId}).returning('id')
+		.then(function(result) {
+			var categoryIds = [];
+			result.forEach(function(row) {
+				categoryIds.push(row.category_id);	
+			});
+			knex('categories').whereIn('id', categoryIds)
+			.then(function(categories) { 
+					res.render('../views/books/update', {book: book[0], categories: categories});
+			});
+		});
+		
 	});	
 });
 
 router.post('/:id', function(req, res) {
-	if (req.body.fiction) {
-		knex('books').where({id: req.params.id})
-		.then(function(bookList) {
-			var book = bookList[0];
-			console.log('boooooooooook', book);
-			knex('fiction').insert({title: book.title, book_id: book.id})
-			.then(function(){});
+	var newGenre = req.body.name,
+		bookId = req.params.id;
+	knex('categories').insert({name: newGenre}).returning('id')
+	.then(function(id) {
+		knex('books_categories').insert({book_id: bookId, category_id: id[0]})
+		.then(function() {
+			res.redirect('/books');
 		});
-	} 
-	if (req.body.nonFiction) {
-		knex('books').where({id: req.params.id})
-		.then(function(bookList) {
-			var book = bookList[0];
-			knex('non_fiction').insert({title: book.title, book_id: book.id})
-			.then(function(){});
-		});
-	} 
-	if (req.body.science) {
-		knex('books').where({id: req.params.id})
-		.then(function(bookList) {
-			var book = bookList[0];
-			knex('science').insert({title: book.title, book_id: book.id})
-			.then(function(){});
-		});
-	}
-	if (req.body.history) {
-		knex('books').where({id: req.params.id})
-		.then(function(bookList) {
-			var book = bookList[0];
-			knex('history').insert({title: book.title, book_id: book.id})
-			.then(function(){});
-		});
-	} 
-	res.redirect('/books');
-})
+	});
+});
+
+router.delete('/category/:bookId/:categoryId', function(req, res) {
+	var bookId = req.params.bookId,
+		categoryId = req.params.categoryId;
+	knex('books_categories').where({book_id: bookId, category_id: categoryId}).del()
+    .then(function() {
+        res.redirect('/books/' + bookId);
+    });
+});
 
 
 module.exports = router;
