@@ -3,18 +3,24 @@ var express = require('express'),
 	knex = require('../db/knex');
 
 router.get('/', function(req, res) {
-	knex('authors').then(function(authors) {
+	knex('authors')
+	.then(function(authors) {
 		if (authors.length === 0) {
 			res.redirect('/authors/new');
-		}
-		authors.forEach(function(author) {
-			knex('books').where({author_id: author.id})
-			.then(function(books) {
-				console.log('auths', authors);
-					res.render('../views/authors/index', {authors: authors, books: books});
+		} else {
+			var authorsBooks = 0;
+			authors.forEach(function(author) {
+				knex('books').where({author_id: author.id})
+				.then(function(books) {
+					author.books = books;
+					authorsBooks += 1;
+					if (authorsBooks === authors.length) {
+						console.log('authors',authors);
+						res.render('../views/authors/index', {authors: authors});
+					}
+				});
 			});
-		});
-		
+		}
 	});
 });	
 
@@ -44,7 +50,6 @@ router.put('/:id', function(req, res) {
 router.delete('/delete/:id', function(req, res) {
 	knex('authors').where({id:req.params.id}).del()
     .then(function(result) {
-    	console.log(result);
         res.redirect('/authors');
     });
 });
