@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Book Genres</title>
+	<title>Book Categories</title>
 </head>
 <body>
-	<h2>Current genres for <%= book.title %></h2>
+	<h2>Current categories for <%= book.title %>:</h2>
 	<ul>
 		<% categories.forEach(function(category) { %>
 			<li><%= category.name %></li>
@@ -13,13 +13,12 @@
 			</form>
 		<% }); %>
 	</ul>
-	<h2>Add a genre for <%= book.title %></h2>
+	<h2>Add a category for <%= book.title %>:</h2>
 	<form method='POST' action='/books/<%= book.id %>'>
-		New Genre Name: <input type='text' name='name'>
+		New Category Name: <input type='text' name='name'>
 		<input type='submit' value='submit'>
 	</form>
 	<br>
-
 	<h2><a href='/books'>Return to book list</a></h2>
 </body>
 </html>

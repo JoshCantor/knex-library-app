@@ -4,7 +4,9 @@ var express = require('express'),
 
 router.get('/', function(req, res) {
 	knex('books').then(function(books) {
-		res.render('../views/books/index', {books: books});
+		knex('categories').then(function(categories) {
+			res.render('../views/books/index', {books: books, categories:categories});
+		});
 	});
 });
 
@@ -30,14 +32,30 @@ router.get('/:id', function(req, res) {
 router.post('/:id', function(req, res) {
 	var newGenre = req.body.name,
 		bookId = req.params.id;
-	knex('categories').insert({name: newGenre}).returning('id')
-	.then(function(id) {
-		knex('books_categories').insert({book_id: bookId, category_id: id[0]})
-		.then(function() {
-			res.redirect('/books');
-		});
+	knex('categories').where({name: newGenre})
+	.then(function(category) {
+		if (category.length === 0 ) {
+			knex('categories').insert({name: newGenre}).returning('id')
+			.then(function(id) {
+				var categoryId = id[0];
+				addCatToBook(bookId, categoryId, res);
+			});
+		} else {
+			knex('categories').where({name: newGenre})
+			.then(function(category) {
+				var categoryId = category[0].id;
+				addCatToBook(bookId, categoryId, res);
+			});
+		}
 	});
 });
+
+function addCatToBook (bookId, categoryId, res) {
+	knex('books_categories').insert({book_id: bookId, category_id: categoryId})
+	.then(function() {
+		res.redirect('/books');
+	});
+}
 
 router.delete('/category/:bookId/:categoryId', function(req, res) {
 	var bookId = req.params.bookId,
@@ -45,6 +63,15 @@ router.delete('/category/:bookId/:categoryId', function(req, res) {
 	knex('books_categories').where({book_id: bookId, category_id: categoryId}).del()
     .then(function() {
         res.redirect('/books/' + bookId);
+    });
+});
+
+router.delete('/categories/:categoryId', function(req, res) {
+	var categoryId = req.params.categoryId;
+	console.log('id',categoryId);
+	knex('categories').where({id: categoryId}).del()
+    .then(function() {
+        res.redirect('/books');
     });
 });
 
