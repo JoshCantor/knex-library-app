@@ -11,10 +11,10 @@
 			</ul>
 		<% }); %>
 	<br>
-	<h1>Categories</h1>
+	<h1>Categories (click to update name)</h1>
 		<% categories.forEach(function(category) { %>
 			<ul>
-				<li><a href="categories/<%= category.id %>"><%= category.name %></a></li>
+				<li><a href="/books/categories/<%= category.id %>"><%= category.name %></a></li>
 			</ul>
 			<form method='POST' action='/books/categories/<%= category.id %>?_method=DELETE'>
 				<input type='submit' value="DELETE <%= category.name %>">

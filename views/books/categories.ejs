@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Book Categories</title>
+</head>
+<body>
+	<h2>Update category name for </h2>
+	<form method="POST" action="/books/categories/<%= category[0].id %>?_method=PUT">
+		New name: <input type="text" name="name" value='<%= category[0].name %>'>
+		<input type="submit" value="Submit Changes">
+	</form>
+</body>
+</html>
