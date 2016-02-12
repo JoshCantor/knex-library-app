@@ -75,5 +75,20 @@ router.delete('/categories/:categoryId', function(req, res) {
     });
 });
 
+router.get('/categories/:categoryId', function(req, res) {
+	var categoryId = req.params.categoryId;
+	knex('categories').where({id:categoryId})
+	.then(function(category) {
+		res.render('../views/books/categories', {category:category});
+	});
+});
+
+router.put('/categories/:id', function(req, res) {
+	var newName = req.body.name;
+	knex('categories').where({id:req.params.id}).update({name: newName})
+	.then(function() {
+		res.redirect('/books');
+	});
+});
 
 module.exports = router;

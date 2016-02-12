@@ -1,3 +1,4 @@
+"use strict";
 var express = require('express'),
 	app = express(),
 	authors = require('./controllers/authors'),
@@ -18,9 +19,7 @@ app.use('/authors', authors);
 
 app.get('/', function(req, res) {
 	res.redirect('/authors');
-})
-
-
+});
 
 app.listen(3000, function() {
 	console.log('Listening on port 3000');
